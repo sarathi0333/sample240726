@@ -67,5 +67,17 @@ src/
   global.scss            # Ionic CSS layers + system dark palette
 .claude/
   agents/                # custom subagents
+  skills/                # project skills, invoked as /<name>
 CLAUDE.md                # instructions Claude Code reads on every session
 ```
+
+## Claude Code skills in this repo
+
+Project skills live in `.claude/skills/<name>/SKILL.md` and are invoked as `/<name>` (or picked up automatically when the request matches the skill's description).
+
+| Skill | What it does |
+|---|---|
+| `git-commit` | Inspects the working tree, splits changes into logical commits, writes messages in this repo's format |
+| `git-pr` | Branches if needed, pushes, and opens a PR described from the whole-branch diff |
+| `git-sync` | Fetch, rebase-vs-merge decision, conflict resolution, rejected pushes |
+| `git-undo` | Recovering from git mistakes — amend, reset, revert, reflog, lost branches and stashes |
