@@ -1,0 +1,56 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project
+
+Ionic 8 + Angular 20 app wrapped by Capacitor 8, generated from the Ionic "blank" starter (`ionic.config.json` → `type: angular-standalone`). Currently just the scaffold: one route (`home`) and one page component.
+
+## Commands
+
+```bash
+npm start                    # ng serve — dev server on http://localhost:4200
+npm run build                # production build (the default configuration) → www/
+npx ng build -c development  # unoptimized build with source maps
+npm run watch                # development build in watch mode
+npm run lint                 # ESLint over src/**/*.ts and src/**/*.html
+npm test                     # Karma + Jasmine, watch mode, launches Chrome
+```
+
+Single test file / single run:
+
+```bash
+npx ng test --include src/app/home/home.page.spec.ts
+npx ng test --watch false                 # one-shot
+npx ng test -c ci                         # no progress output, no watch
+```
+
+Capacitor — no `android/` or `ios/` directory exists yet, so add a platform before syncing:
+
+```bash
+npx cap add ios              # or: android
+npm run build && npx cap sync
+```
+
+`cap sync` copies from `www/`, which is also the Angular builder's `outputPath`, so a build must run first.
+
+## Architecture
+
+**Standalone-only, no NgModules.** Bootstrapping is `bootstrapApplication` in `src/main.ts`, wiring up `provideIonicAngular()`, `provideRouter(routes, withPreloading(PreloadAllModules))`, and `IonicRouteStrategy` (Ionic's route reuse strategy, required for correct page caching and transitions).
+
+**Ionic components are imported per-component from `@ionic/angular/standalone`** — not from `@ionic/angular` — and listed in the component's own `imports` array (see `src/app/home/home.page.ts`). Keep to that single entrypoint; mixing in the module-based `@ionic/angular` package defeats the tree-shaking this setup relies on. Ionicons used in templates must be registered explicitly with `addIcons({ ... })` from `ionicons`; standalone mode has no global icon registry.
+
+**Routing** lives in `src/app/app.routes.ts` and uses `loadComponent` lazy imports. New pages should follow the same pattern; generate them with `npx ng generate page <name>` — `@ionic/angular-toolkit` is the default schematic collection here and emits standalone pages with SCSS.
+
+**Environments** are swapped via `fileReplacements` in `angular.json`: the production build replaces `src/environments/environment.ts` with `environment.prod.ts`. Any new config key must be added to both files.
+
+**Styles**: `src/global.scss` imports the Ionic CSS layers and enables the system dark palette (`palettes/dark.system.css`); `src/theme/variables.scss` holds the Ionic CSS custom properties. Both are registered as global styles in `angular.json`. The production budget caps any single component stylesheet at 4 kb (warning at 2 kb).
+
+**Zone.js change detection** is in use — `src/polyfills.ts` imports `zone.js`, with `src/zone-flags.ts` reserved for zone patch flags. This is not a zoneless app.
+
+## Conventions enforced by tooling
+
+- TypeScript `strict`, plus `noPropertyAccessFromIndexSignature`, `noImplicitReturns`, `noImplicitOverride`; Angular `strictTemplates` is on.
+- ESLint uses the **legacy** `.eslintrc.json` format even though ESLint 9 is installed. Don't migrate to flat config piecemeal — the `@angular-eslint/builder` wiring in `angular.json` has to move with it.
+- Component selectors: `app-` prefixed kebab-case elements. Directive selectors: `app` camelCase attributes. Component class names must end in `Page` or `Component`.
+- Browser targets (`.browserslistrc`): Chrome/Edge ≥107, Firefox ≥106, Safari/iOS ≥16.1.
