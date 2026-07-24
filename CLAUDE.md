@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Ionic 8 + Angular 20 app wrapped by Capacitor 8, generated from the Ionic "blank" starter (`ionic.config.json` → `type: angular-standalone`). Currently just the scaffold: one route (`home`) and one page component.
 
+This is a learning sandbox: its purpose is to exercise Claude Code across different use cases (generating pages, refactoring, tests, reviews, custom agents/skills/hooks), not to ship a product. Features may be unrelated to each other — that's expected. The conventions below still apply to everything added here.
+
 ## Commands
 
 ```bash
