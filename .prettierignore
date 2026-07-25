@@ -2,3 +2,6 @@ www/
 .angular/
 node_modules/
 package-lock.json
+
+# Hand-authored agent/skill instructions — keep formatting as written
+.claude/
