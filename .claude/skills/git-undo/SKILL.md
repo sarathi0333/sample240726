@@ -21,52 +21,61 @@ git reflog -20          # the safety net — every position HEAD has held
 
 This single question decides the approach.
 
-| | Not pushed | Pushed |
-|---|---|---|
-| Rewriting history (`reset`, `amend`, `rebase`) | Fine | **Avoid** — breaks everyone who pulled |
-| Adding a new commit that undoes it (`revert`) | Works, noisier | The correct answer |
+|                                                | Not pushed     | Pushed                                 |
+| ---------------------------------------------- | -------------- | -------------------------------------- |
+| Rewriting history (`reset`, `amend`, `rebase`) | Fine           | **Avoid** — breaks everyone who pulled |
+| Adding a new commit that undoes it (`revert`)  | Works, noisier | The correct answer                     |
 
 Check with `git log --oneline origin/main..HEAD` — anything listed is unpushed.
 
 ## Recipes
 
 **Fix the last commit message** (unpushed):
+
 ```bash
 git commit --amend -m "Better message"
 ```
 
 **Add a forgotten file to the last commit** (unpushed):
+
 ```bash
 git add path/to/file && git commit --amend --no-edit
 ```
 
 **Undo the last commit, keep the changes staged:**
+
 ```bash
 git reset --soft HEAD~1
 ```
 
 **Undo the last commit, keep changes as unstaged edits:**
+
 ```bash
 git reset HEAD~1
 ```
 
 **Undo a pushed commit** — new commit, no history rewrite:
+
 ```bash
 git revert <sha>
 ```
+
 For a merge commit: `git revert -m 1 <sha>`.
 
 **Unstage a file** (keeps the edits):
+
 ```bash
 git restore --staged path/to/file
 ```
 
-**Discard edits to a file** — *destructive, uncommitted work is gone*:
+**Discard edits to a file** — _destructive, uncommitted work is gone_:
+
 ```bash
 git restore path/to/file
 ```
 
 **Committed to the wrong branch** (commits not pushed):
+
 ```bash
 git branch correct-branch          # bookmark the work
 git reset --hard origin/main       # only after confirming the bookmark exists
@@ -74,18 +83,21 @@ git checkout correct-branch
 ```
 
 **Recover a lost commit or a deleted branch:**
+
 ```bash
 git reflog                         # find the sha
 git branch recovered <sha>
 ```
 
 **Recover a dropped stash:**
+
 ```bash
 git fsck --no-reflog | grep commit
 git stash apply <sha>
 ```
 
 **Abort a mess in progress:**
+
 ```bash
 git merge --abort
 git rebase --abort

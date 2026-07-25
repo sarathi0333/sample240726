@@ -38,11 +38,13 @@ Order findings by impact, highest first. Use exactly this structure per finding:
 **Why it matters:** One or two sentences on the concrete cost — what breaks, what confuses a reader, what runs slowly. Not "this is cleaner."
 
 **Current:**
+
 ```<lang>
 <the existing code, verbatim, with just enough context to locate it>
 ```
 
 **Improved:**
+
 ```<lang>
 <the rewritten version — complete and runnable in place, not a sketch with ellipses>
 ```

@@ -19,12 +19,12 @@ If the working tree is dirty, deal with it first — commit it, or `git stash pu
 
 ## 2. Pick rebase or merge
 
-| Situation | Do this |
-|---|---|
-| Your commits are local-only (unpushed) | `git rebase origin/main` — linear history, no noise |
-| Your branch is pushed but nobody else works on it | Rebase is still fine; the push needs `--force-with-lease` |
-| Others have the branch checked out | `git merge origin/main` — never rewrite under them |
-| Updating `main` itself | `git pull --ff-only` — if it fails, you have local commits on `main` that need a branch |
+| Situation                                         | Do this                                                                                 |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Your commits are local-only (unpushed)            | `git rebase origin/main` — linear history, no noise                                     |
+| Your branch is pushed but nobody else works on it | Rebase is still fine; the push needs `--force-with-lease`                               |
+| Others have the branch checked out                | `git merge origin/main` — never rewrite under them                                      |
+| Updating `main` itself                            | `git pull --ff-only` — if it fails, you have local commits on `main` that need a branch |
 
 ```bash
 git rebase origin/main
@@ -39,11 +39,12 @@ git status                    # lists "both modified" files
 git diff --diff-filter=U      # the conflicting hunks
 ```
 
-For each conflicted file: open it, understand *both* sides, and write the version that's actually correct. Do not blindly take `--ours` or `--theirs` — a conflict means two people changed the same logic, and the right answer is usually neither side verbatim.
+For each conflicted file: open it, understand _both_ sides, and write the version that's actually correct. Do not blindly take `--ours` or `--theirs` — a conflict means two people changed the same logic, and the right answer is usually neither side verbatim.
 
 **During a rebase, "ours" and "theirs" are swapped** relative to a merge: `--ours` is the upstream branch you're replaying onto, `--theirs` is your commit. Check with `git status` if unsure.
 
 Then:
+
 ```bash
 git add <resolved files>
 git rebase --continue         # or: git merge --continue
@@ -52,6 +53,7 @@ git rebase --continue         # or: git merge --continue
 Bail out cleanly at any point with `git rebase --abort` / `git merge --abort` — the tree returns to exactly where it started.
 
 After resolving, **build and test before pushing**. A conflict resolution that compiles is not the same as one that's correct:
+
 ```bash
 npm run lint && npx ng test --watch false
 ```

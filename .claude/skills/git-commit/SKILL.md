@@ -5,7 +5,7 @@ description: Stage and commit work as a clean, reviewable history — inspect th
 
 # Committing changes
 
-The goal is a history someone can read six months from now. That means each commit is one coherent change, and its message says *why*.
+The goal is a history someone can read six months from now. That means each commit is one coherent change, and its message says _why_.
 
 ## 1. Look before staging
 
@@ -22,7 +22,7 @@ If anything is already staged that isn't yours, stop and ask before you fold it 
 
 ## 2. Decide the split
 
-Group the changes by intent, not by file. Ask: *would a reviewer want to look at these hunks together?*
+Group the changes by intent, not by file. Ask: _would a reviewer want to look at these hunks together?_
 
 - One commit when the changes serve a single purpose, even across many files.
 - Separate commits when unrelated things happened in the same working tree — a bug fix and a dependency bump are two commits, not one.
