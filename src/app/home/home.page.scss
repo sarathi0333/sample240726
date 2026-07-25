@@ -1,11 +1,14 @@
+// Was absolutely centred; now flows below the push-status card so the two
+// don't overlap.
 #container {
   text-align: center;
+  margin: 32px 0;
+}
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.token {
+  display: block;
+  font-family: monospace;
+  word-break: break-all;
 }
 
 #container strong {

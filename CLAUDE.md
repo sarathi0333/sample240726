@@ -27,14 +27,15 @@ npx ng test --watch false                 # one-shot
 npx ng test -c ci                         # no progress output, no watch
 ```
 
-Capacitor — no `android/` or `ios/` directory exists yet, so add a platform before syncing:
+Capacitor — `ios/` exists; `android/` has not been added yet:
 
 ```bash
-npx cap add ios              # or: android
-npm run build && npx cap sync
+npm run build && npx cap sync   # after any web change
+npx cap open ios                # opens Xcode
+npx cap add android             # android/ does not exist yet
 ```
 
-`cap sync` copies from `www/`, which is also the Angular builder's `outputPath`, so a build must run first.
+`cap sync` copies from `www/`, which is also the Angular builder's `outputPath`, so a build must run first. Capacitor 8 resolves iOS plugins through Swift Package Manager (`ios/App/CapApp-SPM/Package.swift`) — there is no Podfile and CocoaPods is not required.
 
 ## Architecture
 
@@ -49,6 +50,8 @@ npm run build && npx cap sync
 **Styles**: `src/global.scss` imports the Ionic CSS layers and enables the system dark palette (`palettes/dark.system.css`); `src/theme/variables.scss` holds the Ionic CSS custom properties. Both are registered as global styles in `angular.json`. The production budget caps any single component stylesheet at 4 kb (warning at 2 kb).
 
 **Zone.js change detection** is in use — `src/polyfills.ts` imports `zone.js`, with `src/zone-flags.ts` reserved for zone patch flags. This is not a zoneless app.
+
+**Push notifications** go through `PushNotificationsService` (`src/app/services/`), which owns permission, registration, and the four plugin listeners, exposing state as signals. `AppComponent.ngOnInit` calls `initialize()`; it early-returns on non-native platforms, so `ng serve` never touches the plugin. iOS delivery also depends on the two APNs callbacks in `ios/App/App/AppDelegate.swift` — Capacitor's template omits them, so don't drop them if the file is ever regenerated.
 
 ## Conventions enforced by tooling
 

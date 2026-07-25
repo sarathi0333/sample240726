@@ -23,6 +23,11 @@ log.txt
 /platforms
 /plugins
 
+# Capacitor native projects — regenerate with `npx cap add ios`.
+# See CLAUDE.md for the AppDelegate push callbacks that must be re-applied.
+/ios
+/android
+
 # Compiled output
 /dist
 /tmp

@@ -11,6 +11,33 @@
     </ion-toolbar>
   </ion-header>
 
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Push notifications</ion-card-subtitle>
+      <ion-card-title>{{ statusLabel() }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      @if (token(); as deviceToken) {
+        <p>Device token</p>
+        <ion-note class="token">{{ deviceToken }}</ion-note>
+      }
+
+      @if (error(); as message) {
+        <ion-note color="danger">{{ message }}</ion-note>
+      }
+
+      @if (lastNotification(); as notification) {
+        <p>Last received</p>
+        <ion-note>{{ notification.title }} — {{ notification.body }}</ion-note>
+      }
+
+      <ion-button expand="block" fill="outline" (click)="clearDelivered()">
+        Clear delivered notifications
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
   <div id="container">
     <strong>Ready to create an app?</strong>
     <p>
